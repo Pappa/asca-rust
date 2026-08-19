@@ -28,22 +28,19 @@ impl ValidateField {
 
 pub(crate) fn run(
     rules: Option<std::path::PathBuf>,
-    rule: Option<String>,
+    string: Option<String>,
     field: Option<ValidateField>,
-    fragment: Option<String>,
 ) -> io::Result<()> {
-  match (field, fragment, rule) {
-        (Some(field_kind), Some(fragment), None) => validate_field(field_kind, &fragment),
-        (None, None, Some(rule)) => validate_rule_line(&rule),
-        (None, None, None) => {
+    match (field, string) {
+        (Some(field_kind), Some(s)) => validate_field(field_kind, &s),
+        (None, Some(s)) => validate_rule_line(&s),
+        (None, None) => {
             let rules = parse::parse_rsca(
                 &util::validate_or_get_path(rules.as_deref(), &[RULE_FILE_EXT, "txt"], "rule")?,
             )?;
             validate_rule_groups(&rules)
         },
-        _ => Err(io::Error::other(
-            "asca: use -r for a rule file, -s for one rule line, or -f with a fragment",
-        )),
+        (Some(_), None) => Err(io::Error::other("asca: -f requires -s")),
     }
 }
 

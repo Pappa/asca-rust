@@ -41,12 +41,11 @@ fn run() -> io::Result<()> {
         Some(AscaCommand::Trace { rules, word, alias }) => {
             cli::trace::run(rules, word.into_inner(), alias)
         },
-        Some(AscaCommand::Validate { rules, rule, field, fragment }) => {
+        Some(AscaCommand::Validate { rules, string, field }) => {
             cli::validate::run(
                 rules,
-                rule,
+                string.map(|s| s.into_inner()),
                 field,
-                fragment.map(|f| f.into_inner()),
             )
         },
         None => Ok(()),

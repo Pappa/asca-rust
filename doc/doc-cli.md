@@ -328,18 +328,18 @@ Options:
 ```
 ### Validate Command
 ```
-usage: asca validate [-r | --rules <path>] [-s <rule>] [-f <field> <fragment>] | [-h | --help]
+usage: asca validate [-r | --rules <path>] [-s <string>] [-f <field>] | [-h | --help]
 
-Validate rule syntax
+Validate rule syntax without words or application.
 
 Options:
-    -r  <path>              Path to a rsca file containing the rules to be validated.
-                            - If -r is not provided, asca will look for a file in the current directory.
-    -s  <rule>              Validate a single rule string.
-                            - e.g. `asca validate -s 's → ʃ / // V_'
-    -f  <field> <fragment>  Validate one rule fragment: input, output, context, or exception.
-                            - Requires both field and fragment arguments (e.g. `asca validate -f context '#_'`).
-    -h                      Print help
+    -r  <path>      Path to a rsca file containing the rules to be validated.
+                    - If -r is not provided, asca will look for a file in the current directory.
+    -s  <string>    Validate a rule, or rule fragment when -f is also given.
+                    - e.g. `asca validate -s 's > ʃ / // V_'`
+                    - e.g. `asca validate -s 'V_' -f context`
+    -f  <field>     Field to validate: input, output, context, or exception (requires -s).
+    -h              Print help
 ```
 
 ## Shell Completions

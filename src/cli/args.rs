@@ -108,17 +108,13 @@ pub enum AscaCommand {
         #[arg(short, long, verbatim_doc_comment, value_hint=clap::ValueHint::FilePath)]
         rules: Option<PathBuf>,
 
-        /// A single rule string to validate (avoids `#` description lines in `.rsca` files).
-        #[arg(short = 's', verbatim_doc_comment, conflicts_with = "field")]
-        rule: Option<String>,
+        /// Rule string, or a rule fragment when -f is also given.
+        #[arg(short = 's', verbatim_doc_comment)]
+        string: Option<MaybeStdin<String>>,
 
-        /// Validate a single rule field: input, output, context, or exception.
-        #[arg(short = 'f', value_enum, requires = "fragment", conflicts_with = "rule")]
+        /// Validate -s as a single field: input, output, context, or exception.
+        #[arg(short = 'f', value_enum, requires = "string")]
         field: Option<super::validate::ValidateField>,
-
-        /// Field fragment to validate when -f is provided.
-        #[arg(verbatim_doc_comment)]
-        fragment: Option<MaybeStdin<String>>,
     }
 }
 
