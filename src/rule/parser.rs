@@ -1510,7 +1510,13 @@ impl Parser {
                 match self.curr_tkn.kind {
                     TokenKind::Comma if inputs.is_empty() => return Err(RuleSyntaxError::EmptyInput(self.group, self.line, self.curr_tkn.position.start)),
                     TokenKind::Diacritic(_) => return Err(RuleSyntaxError::FloatingDiacritic(self.curr_tkn.position)),
-                    _ if inputs.is_empty()  => return Err(RuleSyntaxError::UnknownCharacter(self.curr_tkn.value.chars().next().unwrap(), self.group, self.line, self.curr_tkn.position.start)),
+                    TokenKind::Eol | TokenKind::Comment if inputs.is_empty() => {
+                        return Err(RuleSyntaxError::EmptyInput(self.group, self.line, self.curr_tkn.position.start))
+                    },
+                    _ if inputs.is_empty()  => {
+                        let ch = self.curr_tkn.value.chars().next().unwrap_or('\0');
+                        return Err(RuleSyntaxError::UnknownCharacter(ch, self.group, self.line, self.curr_tkn.position.start))
+                    },
                     _ => break
                 }
             }
@@ -1622,6 +1628,25 @@ impl Parser {
         } else {
             Ok(Some(self.rule()?))
         }
+    }
+
+    pub(crate) fn validate_field(&mut self, part: super::RulePart) -> Result<(), RuleSyntaxError> {
+        use super::RulePart;
+        match part {
+            RulePart::Input => {
+                self.get_input()?;
+            }
+            RulePart::Output => {
+                self.get_output()?;
+            }
+            RulePart::Context | RulePart::Exception => {
+                self.get_env_expr()?;
+            }
+        }
+        if !self.expect(TokenKind::Eol) && !self.expect(TokenKind::Comment) {
+            return Err(RuleSyntaxError::ExpectedEndLine(self.curr_tkn.clone()));
+        }
+        Ok(())
     }
 
 }

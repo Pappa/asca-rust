@@ -123,6 +123,16 @@ impl ParsedRules {
         crate::apply_rules_trace(&self.rules, phrase)
     }
 
+    /// Tier-3 structural checks (condensed I/O balance, insert+delete) without applying rules.
+    pub fn check_structure(&self) -> Result<(), RuleSyntaxError> {
+        for rule_group in &self.rules {
+            for rule in rule_group {
+                rule.split_into_subrules()?;
+            }
+        }
+        Ok(())
+    }
+
     /// Returns an array of references to the traced rules or None if out of bounds.
     pub fn get_traced_rules(&self, changes: &[Change]) -> Option<Vec<(&String, &Vec<Rule>, &String)>> {
         changes.iter().map(|Change { rule_index: i, .. }| {

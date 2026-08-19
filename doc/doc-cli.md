@@ -12,6 +12,7 @@
     * [Seq](#seq-command)
     * [Conv](#conv-command)
     * [Trace](#trace-command)
+    * [Validate](#validate-command)
 * [Shell Completions](#shell-completions)
 
 ## File Formats
@@ -324,6 +325,21 @@ Options:
                 - If -r is not provided, asca will look for a file in the current directory.
     -l  <path>  Path to an alias file containing romanisations to and from.
     -h          Print help
+```
+### Validate Command
+```
+usage: asca validate [-r | --rules <path>] [-s <rule>] [-f <field> <fragment>] | [-h | --help]
+
+Validate rule syntax
+
+Options:
+    -r  <path>              Path to a rsca file containing the rules to be validated.
+                            - If -r is not provided, asca will look for a file in the current directory.
+    -s  <rule>              Validate a single rule string.
+                            - e.g. `asca validate -s 's → ʃ / // V_'
+    -f  <field> <fragment>  Validate one rule fragment: input, output, context, or exception.
+                            - Requires both field and fragment arguments (e.g. `asca validate -f context '#_'`).
+    -h                      Print help
 ```
 
 ## Shell Completions

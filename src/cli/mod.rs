@@ -6,6 +6,7 @@ pub mod seq;
 pub mod run;
 pub mod convert;
 pub mod trace;
+pub mod validate;
 
 use asca::rule::RuleGroup;
 

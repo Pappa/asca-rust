@@ -100,6 +100,25 @@ pub enum AscaCommand {
         /// Path to an alias file containing romanisations to and from.
         #[arg(short='l', long, verbatim_doc_comment, value_hint=clap::ValueHint::FilePath)]
         alias: Option<PathBuf>,
+    },
+    /// Validate rule syntax without words or application
+    Validate {
+        /// Path to a rsca file containing the rules to be validated.
+        /// - If -r is not provided, asca will look for a file in the current directory.
+        #[arg(short, long, verbatim_doc_comment, value_hint=clap::ValueHint::FilePath)]
+        rules: Option<PathBuf>,
+
+        /// A single rule string to validate (avoids `#` description lines in `.rsca` files).
+        #[arg(short = 's', verbatim_doc_comment, conflicts_with = "field")]
+        rule: Option<String>,
+
+        /// Validate a single rule field: input, output, context, or exception.
+        #[arg(short = 'f', value_enum, requires = "fragment", conflicts_with = "rule")]
+        field: Option<super::validate::ValidateField>,
+
+        /// Field fragment to validate when -f is provided.
+        #[arg(verbatim_doc_comment)]
+        fragment: Option<MaybeStdin<String>>,
     }
 }
 

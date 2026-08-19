@@ -11,6 +11,23 @@ use subrule::*;
 pub use lexer::*;
 pub use parser::*;
 
+/// A single field of an ASCA rule for independent syntax validation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RulePart {
+    Input,
+    Output,
+    Context,
+    Exception,
+}
+
+/// Parse a rule-field fragment without requiring whole-rule introducers (`>`, `/`, `|`).
+pub fn validate_part(part: RulePart, fragment: &str) -> Result<(), RuleSyntaxError> {
+    let tokens = Lexer::new(&fragment.chars().collect::<Vec<_>>(), 0, 0).get_line()?;
+    let mut parser = Parser::new(tokens, 0, 0);
+    parser.validate_field(part)?;
+    Ok(())
+}
+
 
 use std ::{
     cell::RefCell, 

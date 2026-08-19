@@ -1,6 +1,7 @@
 
 
 mod meta;
+mod validate;
 
 use crate::{rule::{Lexer, Parser, Rule, RuleGroup}, word::{Phrase, Word}};
 
